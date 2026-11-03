@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Semakan Markah Matematik</title>
-    <!-- Masukkan Chart.js untuk paparan graf garis pencapaian murid -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Masukkan Chart.js dari CDN yang stabil -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -168,11 +168,15 @@
             font-weight: bold;
         }
 
+        /* Tetapan Kontena Graf yang Diperbaiki */
         .chart-container {
             position: relative;
             margin-top: 25px;
-            height: 300px;
             width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
         }
 
         .comment-box {
@@ -212,7 +216,7 @@
             
             <div class="form-group">
                 <label for="student-name">Nama Penuh Pelajar (HURUF BESAR) mengikut Kad Pengenalan:</label>
-                <input type="text" id="student-name" placeholder="CONTOH: MOHAMAD ALI BIN SAIFUL">
+                <input type="text" id="student-name" placeholder="CONTOH: MOHAMAD SAIFUL BIN AZIM">
             </div>
 
             <div class="form-group">
@@ -244,7 +248,7 @@
                 </table>
 
                 <!-- Paparan Graf Garis Pencapaian -->
-                <div class="chart-container" id="chart-wrapper">
+                <div class="chart-container">
                     <canvas id="performanceChart"></canvas>
                 </div>
 
@@ -520,13 +524,11 @@
             const resultBox = document.getElementById('student-result');
             const tbody = document.getElementById('student-table-body');
             const infoDiv = document.getElementById('res-student-info');
-            const chartWrapper = document.getElementById('chart-wrapper');
             const commentText = document.getElementById('comment-text');
 
             errorDiv.innerText = "";
             resultBox.style.display = "none";
             tbody.innerHTML = "";
-            chartWrapper.style.display = "none";
 
             if (!inputName) {
                 errorDiv.innerText = "Sila masukkan nama penuh anda.";
@@ -562,16 +564,17 @@
                 return;
             }
 
+            // Papar kotak keputusan (yang merangkumi jadual, graf & ulasan)
             resultBox.style.display = "block";
-            chartWrapper.style.display = "block";
 
-            // Papar Graf & Ulasan Analisis
+            // Papar Graf & Ulasan Analisis secara terus
             renderPerformanceChart(student.scores);
             generateComment(student.scores);
         }
 
         function renderPerformanceChart(scores) {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const canvasEl = document.getElementById('performanceChart');
+            const ctx = canvasEl.getContext('2d');
             
             const examLabels = ['PPT T4', 'PAT T4', 'PPT', 'SPMC'];
             const markValues = examLabels.map(exam => {
